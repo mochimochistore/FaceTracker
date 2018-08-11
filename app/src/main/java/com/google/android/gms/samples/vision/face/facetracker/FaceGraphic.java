@@ -113,110 +113,24 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
-        // 認識した顔領域の中心に円（点）を描画
-        // （ translateX、translateY メソッドによって、フロントカメラ、リアカメラの場合の座標の差異を吸収している）
-        float centerX = translateX(face.getPosition().x + face.getWidth() / 2);
-        float centerY = translateY(face.getPosition().y + face.getHeight() / 2);
-        canvas.drawCircle(centerX, centerY, FACE_POSITION_RADIUS, mFacePositionPaint);
+        // TODO: 認識した顔領域の中心に円（点）を描画
 
-        // 認識した顔領域の情報を元に、その顔領域を覆う長方形を描画
-        // （ scaleX、scaleY メソッドは、それぞれ、取得した座標を、実際の画面に合わせて調整するメソッド）
-        float xOffset = scaleX(face.getWidth() / 2.0f);
-        float yOffset = scaleY(face.getHeight() / 2.0f);
-        float left = centerX - xOffset;
-        float top = centerY - yOffset;
-        float right = centerX + xOffset;
-        float bottom = centerY + yOffset;
-        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        // TODO: 認識した顔領域の情報を元に、その顔領域を覆う長方形を描画
 
-        // 目、口などを検知した位置の情報を取得
-        List<Landmark> landmarks = face.getLandmarks();
+        // TODO: 目、口などを検知した位置の情報を取得
 
-        // 目、口などの位置の情報を保持する Map を作成
-        Map<Integer, PointF> positions = new HashMap<>();
+        // TODO: 目、口などの位置の情報を保持する Map を作成
 
-        for (Landmark landmark : landmarks) {
-            switch (landmark.getType()) {
-                case Landmark.LEFT_EYE:
-                    // 左目を検知した場合
-                    positions.put(Landmark.LEFT_EYE, landmark.getPosition());
-                    break;
-                case Landmark.RIGHT_EYE:
-                    // 右目を検知した場合
-                    positions.put(Landmark.RIGHT_EYE, landmark.getPosition());
-                    break;
-                case Landmark.LEFT_MOUTH:
-                    // 口の左端を検知した場合
-                    positions.put(Landmark.LEFT_MOUTH, landmark.getPosition());
-                    break;
-                case Landmark.RIGHT_MOUTH:
-                    // 口の右端を検知した場合
-                    positions.put(Landmark.RIGHT_MOUTH, landmark.getPosition());
-                    break;
-                case Landmark.BOTTOM_MOUTH:
-                    // 口の下端を検知した場合
-                    positions.put(Landmark.BOTTOM_MOUTH, landmark.getPosition());
-                    break;
-            }
-        }
+        // TODO: landmarks リストから、左目、右目、口の位置情報を取得して positions マップに格納
 
-        // 左目位置に四角形を描画
-        if (positions.containsKey(Landmark.LEFT_EYE)) {
-            float x = translateX(positions.get(Landmark.LEFT_EYE).x);
-            float y = translateY(positions.get(Landmark.LEFT_EYE).y);
-            float offset = face.getWidth() / 5.0f;
-            canvas.drawRect(x - offset, y - offset, x + offset, y + offset, mBoxPaint);
-        }
-        // 右目位置に四角形を描画
-        if (positions.containsKey(Landmark.RIGHT_EYE)) {
-            float x = translateX(positions.get(Landmark.RIGHT_EYE).x);
-            float y = translateY(positions.get(Landmark.RIGHT_EYE).y);
-            float offset = face.getWidth() / 5.0f;
-            canvas.drawRect(x - offset, y - offset, x + offset, y + offset, mBoxPaint);
-        }
-        // 口の位置に四角形を描画
-        if (positions.containsKey(Landmark.LEFT_MOUTH) &&
-                positions.containsKey(Landmark.RIGHT_MOUTH) &&
-                positions.containsKey(Landmark.BOTTOM_MOUTH)) {
-            float mouthLeft = translateX(positions.get(Landmark.LEFT_MOUTH).x);
-            float mouthTop = (positions.get(Landmark.LEFT_MOUTH).y > positions.get(Landmark.RIGHT_MOUTH).y)
-                    ? translateY(positions.get(Landmark.LEFT_MOUTH).y) : translateY(positions.get(Landmark.RIGHT_MOUTH).y);
-            float mouthRight = translateX(positions.get(Landmark.RIGHT_MOUTH).x);
-            float mouthBottom = translateY(positions.get(Landmark.BOTTOM_MOUTH).y);
-            canvas.drawRect(mouthLeft, mouthTop, mouthRight, mouthBottom, mBoxPaint);
-        }
+        // TODO: 左目位置に四角形を描画
 
-        // 笑顔の度合いを 0.00 - 1.00 の数値で表示
-        canvas.drawText("笑顔レベル: " + String.format("%.2f", face.getIsSmilingProbability()),
-                left - ID_X_OFFSET, bottom - ID_Y_OFFSET, mIdPaint);
+        // TODO: 右目位置に四角形を描画
 
-        // 笑顔の度合いが一定レベルを超えたら、ウサギの耳のイメージを頭の位置の上に描画
-        if (face.getIsSmilingProbability() > 0.3f) {
-            Rect original = new Rect(0, 0, mImage.getWidth(), mImage.getHeight());
+        // TODO: 口の位置に四角形を描画
 
-            float offsetBottom = scaleY(face.getHeight() / 4.0f);
-            float offsetTop = offsetBottom + (right - left); // 正方形になるように描画
-            RectF destination = new RectF(left, centerY - offsetTop, right, centerY - offsetBottom);
+        // TODO: 笑顔の度合いを 0.00 - 1.00 の数値で表示
 
-            canvas.drawBitmap(mImage, original, destination, new Paint());
-        }
-
-//        // Draws a circle at the position of the detected face, with the face's track id below.
-//        float x = translateX(face.getPosition().x + face.getWidth() / 2);
-//        float y = translateY(face.getPosition().y + face.getHeight() / 2);
-//        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-//        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-//        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-//        canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-//        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
-
-        // Draws a bounding box around the face.
-//        float xOffset = scaleX(face.getWidth() / 2.0f);
-//        float yOffset = scaleY(face.getHeight() / 2.0f);
-//        float left = x - xOffset;
-//        float top = y - yOffset;
-//        float right = x + xOffset;
-//        float bottom = y + yOffset;
-//        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        // TODO: 笑顔の度合いが一定レベルを超えたら、ウサギの耳のイメージを頭の位置の上に描画
     }
 }

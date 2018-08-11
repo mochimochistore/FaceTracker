@@ -299,7 +299,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         @Override
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
             mOverlay.add(mFaceGraphic);
-            mFaceGraphic.updateFace(face); // 認識した情報を画面上に描画する
+            // TODO: 認識した情報を画面上に描画するため、FaceGraphic クラスの updateFace メソッドを呼び出す
         }
 
         /**
