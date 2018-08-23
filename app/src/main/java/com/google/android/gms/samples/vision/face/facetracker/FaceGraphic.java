@@ -179,7 +179,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
                 positions.containsKey(Landmark.RIGHT_MOUTH) &&
                 positions.containsKey(Landmark.BOTTOM_MOUTH)) {
             float mouthX1 = translateX(positions.get(Landmark.LEFT_MOUTH).x);
-            float mouthTop = (positions.get(Landmark.LEFT_MOUTH).y > positions.get(Landmark.RIGHT_MOUTH).y)
+            float mouthTop = (positions.get(Landmark.LEFT_MOUTH).y < positions.get(Landmark.RIGHT_MOUTH).y)
                     ? translateY(positions.get(Landmark.LEFT_MOUTH).y) : translateY(positions.get(Landmark.RIGHT_MOUTH).y);
             float mouthX2 = translateX(positions.get(Landmark.RIGHT_MOUTH).x);
             float mouthBottom = translateY(positions.get(Landmark.BOTTOM_MOUTH).y);
